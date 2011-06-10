@@ -31,7 +31,7 @@
         <title>OpenRide</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta content="width=device-width; initial-scale=1.0; user-scalable=false;" name="viewport" />
-        <link rel="stylesheet" type="text/css" href="/OpenRideServer-RS/welcome_style-min.css" />
+        <link rel="stylesheet" type="text/css" href="/OpenRideServer-RS/welcome_style.css" />
         <script src="/OpenRideServer-RS/welcome_script-min.js" type="text/javascript"></script>
         <link href="/OpenRideServer-RS/img/icon.png" rel="shortcut icon" />
     </head>
