@@ -6,7 +6,7 @@
         <property name="portNumber" value="5432"/>
         <property name="databaseName" value="openride"/>
         <property name="User" value="openride"/>
-        <property name="Password" value="$1openride"/>
+        <property name="Password" value="openride2011"/>
         <property name="URL" value="jdbc:postgresql://localhost:5432/openride"/>
         <property name="driverClass" value="org.postgresql.Driver"/>
     </jdbc-connection-pool>
