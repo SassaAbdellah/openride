@@ -10,6 +10,101 @@
 <project name="OpenRideServer-RS" default="default" basedir=".">
     <description>Builds, tests, and runs the project OpenRideServer-RS.</description>
     <import file="nbproject/build-impl.xml"/>
+
+    <!--
+   * minify will concatenate all of our non-TinyMCE javascripts and stylesheets
+   * then use the YUI compressor library to compress them
+   -->
+    <target name="-pre-dist"> <!-- was called minify -->
+        <!--${libs} is path to the downloaded jars -->
+        <property
+            name="yui-compressor.jar"
+            location="../lib/yuicompressor-2.4.2.jar" />
+        <property
+            name="yui-compressor-ant-task.jar"
+            location="../lib/yui-compressor-ant-task-0.5.jar" />
+
+        <path id="task.classpath">
+            <pathelement location="${yui-compressor.jar}" />
+            <pathelement location="${yui-compressor-ant-task.jar}" />
+        </path>
+
+        <!-- yui-compressor task definition -->
+        <taskdef
+            name="yui-compressor"
+            classname="net.noha.tools.ant.yuicompressor.tasks.YuiCompressorTask">
+
+            <classpath refid="task.classpath" />
+        </taskdef>
+
+        <!-- concatenation of javascript -->
+        <echo message="Building global.js" />
+        <concat destfile="${build.dir}/web/view/js/global.js" force="no">
+            <!-- explicitly order js concat because ordering matters here -->
+            <fileset dir="${build.dir}" includes="web/controller/libs/jquery-1.4.2.min.js" />
+            <fileset dir="${build.dir}" includes="web/controller/libs/gears_init.js" />
+            <fileset dir="${build.dir}" includes="web/view/js/uitablist.js" />
+            <fileset dir="${build.dir}" includes="web/controller/libs/stringbuilder.js" />
+            <fileset dir="${build.dir}" includes="web/view/js/ui_core.js" />
+            <fileset dir="${build.dir}" includes="web/controller/libs/json2.js" />
+            <fileset dir="${build.dir}" includes="web/view/js/ui_tabs.js" />
+            <fileset dir="${build.dir}" includes="web/controller/initcontroller.js" />
+            <fileset dir="${build.dir}" includes="web/controller/serverconnector.js" />
+            <fileset dir="${build.dir}" includes="web/controller/modules/native.module.js" />
+            <fileset dir="${build.dir}" includes="web/controller/modules/mapmanager.module.js" />
+            <fileset dir="${build.dir}" includes="web/controller/modules/offer.module.js" />
+            <fileset dir="${build.dir}" includes="web/controller/modules/search.module.js" />
+            <fileset dir="${build.dir}" includes="web/controller/modules/favorites.module.js" />
+            <fileset dir="${build.dir}" includes="web/controller/modules/ratings.module.js" />
+            <fileset dir="${build.dir}" includes="web/controller/modules/profile.module.js" />
+            <fileset dir="${build.dir}" includes="web/controller/modules/calendar.js" />
+            <fileset dir="${build.dir}" includes="web/controller/modules/modulemanager.js" />
+            <fileset dir="${build.dir}" includes="web/controller/modules/eventlistener.module.js" />
+            <fileset dir="${build.dir}" includes="web/view/js/mdetect.js" />
+
+        </concat>
+
+        <echo message="Building global-body.js" />
+        <concat destfile="${build.dir}/web/view/js/global-body.js" force="no">
+            <!-- explicitly order js concat because ordering matters here -->
+            <fileset dir="${build.dir}" includes="web/view/js/overlay_dialog.js" />
+            <fileset dir="${build.dir}" includes="web/view/js/progress_dialog.js" />
+
+        </concat>
+
+        <!-- concatenation of cascading stylesheets -->
+        <echo message="Building global.css" />
+        <concat destfile="${build.dir}/web/view/css/global.css" force="no">
+            <fileset dir="${build.dir}" includes="web/view/css/style.css" />
+            <fileset dir="${build.dir}" includes="web/view/css/footer.css" />
+        </concat>
+
+        <!-- invoke compressor -->
+        <yui-compressor warn="false" munge="true" preserveallsemicolons="false" charset="UTF-8" fromdir="${build.dir}" todir="${build.dir}">
+            <include name="web/view/js/global.js" />
+            <include name="web/view/js/global-body.js" />
+            <include name="web/view/css/global.css" />
+            <include name="web/welcome_script.js" />
+            <include name="web/welcome_style.css" />
+        </yui-compressor>
+
+    </target>
+
+    <!--
+   * purge-src takes our compressed files, moves them to the base /common dir
+   * and deletes the source js and css dirs from the build dir
+   -->
+    <!--target name="purge-src" depends="minify">
+        <echo message="Purging javascript and stylesheet sources" />
+
+        <move file="${build.dir}/web/common/js/global-min.js" tofile="${build.dir}/web/common/global.js"/>
+        <move file="${build.dir}/web/common/css/global-min.css" tofile="${build.dir}/web/common/global.css"/>
+
+        <delete dir="${build.dir}/web/common/js" />
+        <delete dir="${build.dir}/web/common/css" />
+
+    </target-->
+    
     <!--
 
     There exist several targets which are by default empty and which can be 
